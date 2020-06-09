@@ -94,11 +94,11 @@ class TypeGuesserTest extends TestCase
     /**
      * @dataProvider noAssociationData
      */
-    public function testGuessTypeNoAssociation($type, $resultType, $confidence): void
+    public function testGuessTypeNoAssociation($type, $resultType, $confidence, $property = 'fakeProperty'): void
     {
         $classMetadata = $this->prophesize(ClassMetadata::class);
 
-        $classMetadata->hasAssociation($property = 'fakeProperty')->willReturn(false);
+        $classMetadata->hasAssociation($property)->willReturn(false);
         $classMetadata->getTypeOfField($property)->willReturn($type);
 
         $this->modelManager->getParentMetadataForProperty(
@@ -224,6 +224,12 @@ class TypeGuesserTest extends TestCase
                 'somefake',
                 $text,
                 Guess::LOW_CONFIDENCE,
+            ],
+            '_action' => [
+                null,
+                'actions',
+                Guess::MEDIUM_CONFIDENCE,
+                '_action',
             ],
         ];
     }

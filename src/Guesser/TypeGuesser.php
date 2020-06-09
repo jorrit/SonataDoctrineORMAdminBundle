@@ -68,7 +68,8 @@ class TypeGuesser extends AbstractTypeGuesser
             }
         }
 
-        switch ($metadata->getTypeOfField($propertyName)) {
+        $fieldType = $metadata->getTypeOfField($propertyName);
+        switch ($fieldType) {
             case 'array':
             case 'simple_array':
             case 'json':
@@ -101,6 +102,10 @@ class TypeGuesser extends AbstractTypeGuesser
             case 'time_immutable':
                 return new TypeGuess(TemplateRegistry::TYPE_TIME, [], Guess::HIGH_CONFIDENCE);
             default:
+                if ($fieldType === null && $propertyName === '_action') {
+                    return new TypeGuess('actions', [], Guess::MEDIUM_CONFIDENCE);
+                }
+
                 // NEXT_MAJOR: return new TypeGuess(TemplateRegistry::TYPE_STRING, [], Guess::LOW_CONFIDENCE)
                 return new TypeGuess(TemplateRegistry::TYPE_TEXT, [], Guess::LOW_CONFIDENCE);
         }
